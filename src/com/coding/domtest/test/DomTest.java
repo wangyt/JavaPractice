@@ -50,6 +50,7 @@ public class DomTest {
 						System.out.println(childNode.getNodeName());
 						//获取节点值不能直接childNode.getNodeValue()，还要继续通过上面的方式或者通过getFirstChild然后取Value或者getTextContent
 						//注意getFirstChild然后取Value和getTextContent方式的区别
+						
 					}
 				}
 			}
