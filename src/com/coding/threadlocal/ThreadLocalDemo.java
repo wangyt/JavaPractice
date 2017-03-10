@@ -23,6 +23,7 @@ public class ThreadLocalDemo implements Runnable {
 	}
 
 	public void accessStudent() {
+		
 		//获取当前线程名字
 		String currentThreadName = Thread.currentThread().getName();
 		System.out.println(currentThreadName + " is Running");
@@ -30,27 +31,33 @@ public class ThreadLocalDemo implements Runnable {
 		Random random = new Random();
 		int age = random.nextInt(100);
 		System.out.println("Thread " + currentThreadName + " set age to: " + age);
-		//获取一个Student对象，并将随机数年龄插入到对象属性中	
-		Student student1 = getStudent();//观察两种取得student对象方式的不同
-		student1.setAge(age);
-		System.out.println("Thread " + currentThreadName + " first read age is: " + student1.getAge());
 		
-		//让线程进入休眠
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		//再加个循环测试下
+		for (int i = 0; i < 5; i++) {
+			//获取一个Student对象，并将随机数年龄插入到对象属性中	
+			//Student student1 = new Student();
+			Student student1 = getStudent();//观察两种取得student对象方式的不同
+			student1.setAge(age);
+			System.out.println("Thread " + currentThreadName + " 第 " + i + "-1 次 read age is: " + student1.getAge());
+			
+			//让线程进入休眠
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			//休眠后再次观察该线程读取的对象的属性值是否被修改
+			System.out.println("Thread " + currentThreadName + " 第 " + i + "-2 次 read age is: " + student1.getAge());
 		}
-		
-		//休眠后再次观察该线程读取的对象的属性值是否被修改
-		System.out.println("Thread " + currentThreadName + " second read age is: " + student1.getAge());
 	}
 	
 	protected Student getStudent(){
 		//获取本地线程变量并强制转换为Student类型
 		Student student = (Student)studentLocal.get();
-		//线程首次执行此方法时，studentLocal.get()肯定为null
+		//每个线程首次执行此方法时，studentLocal.get()肯定为null
 		if (student == null) {
+			System.out.println("+++++++++++试试这里进来几次+++++++++++");
 			student = new Student();
 			studentLocal.set(student);
 		}
